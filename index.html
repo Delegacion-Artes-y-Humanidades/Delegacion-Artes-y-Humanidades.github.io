@@ -223,6 +223,59 @@ textarea{resize:vertical;min-height:84px}
 .listo .cuenta{font-size:1.6rem;font-variant-numeric:tabular-nums;color:var(--texto);font-weight:600}
 .creditos .organiza{display:flex;flex-wrap:wrap;gap:6px 14px}
 .creditos .organiza a{color:var(--tenue)}
+/* varios altares a la vez: la escena se divide y los turnos pasan a una columna a la derecha */
+#vista-altar.multi .escena{right:calc(max(16px,2.5vw) + clamp(200px,19vw,300px) + clamp(16px,2vw,32px));gap:clamp(12px,1.6vw,28px);grid-template-columns:repeat(2,minmax(0,1fr))}
+#vista-altar.multi.n3 .escena,#vista-altar.multi.n4 .escena{grid-template-rows:repeat(2,minmax(0,1fr))}
+#vista-altar.multi .turnos{grid-template-columns:minmax(0,1fr) clamp(200px,19vw,300px);grid-template-rows:minmax(0,1fr)}
+#vista-altar.multi .turnos .caja{grid-area:1/2;flex-direction:column;align-items:stretch;justify-content:flex-end}
+#vista-altar.multi .qr{align-self:center}
+.panel{position:relative;display:grid;min-width:0;min-height:0}
+.panel > .retrato{grid-area:1/1}
+.num-altar{position:absolute;top:0;left:0;z-index:2;font-size:clamp(.65rem,.9vw,.85rem);letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--cempa-claro);background:color-mix(in srgb,var(--noche) 70%,transparent);border:1px solid var(--cempa);border-radius:999px;padding:2px 10px}
+#vista-altar.multi .retrato{grid-template-columns:minmax(0,1.618fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr);gap:clamp(8px,1.2vw,20px)}
+#vista-altar.multi .retrato svg{grid-row:auto}
+#vista-altar.multi.n2 .retrato{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1.618fr) minmax(0,1fr);justify-items:center;text-align:center}
+#vista-altar.multi.n2 .retrato .datos{align-self:start}
+#vista-altar.multi.n2 .datos blockquote{border-left:0;padding-left:0}
+#vista-altar.multi.n2 .mini-platos{justify-content:center}
+#vista-altar.multi .retrato .datos{align-self:center;gap:clamp(4px,.8vh,10px)}
+#vista-altar.multi .datos h2{font-size:clamp(1.1rem,2.1vw,2.3rem)}
+#vista-altar.multi .datos .eti{font-size:clamp(.6rem,.8vw,.8rem)}
+#vista-altar.multi .anios,#vista-altar.multi .gustos,#vista-altar.multi .datos blockquote,#vista-altar.multi .firma{font-size:clamp(.72rem,.9vw,1rem)}
+#vista-altar.multi .mini-platos img{width:clamp(30px,3vw,50px)}
+#vista-altar.multi.n3 .datos blockquote,#vista-altar.multi.n4 .datos blockquote{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+/* pedir corrección o borrado */
+.enlace-sol{background:none;border:0;padding:0;color:var(--cempa-claro);text-decoration:underline;cursor:pointer;font:inherit;font-size:.9rem}
+.tarjeta .enlace-sol{font-size:.78rem;justify-self:start;margin-top:2px;color:var(--tenue)}
+dialog.sol{border:1px solid var(--linea);border-radius:18px;background:var(--noche-2);color:var(--texto);padding:0;width:min(520px,calc(100vw - 32px));max-height:calc(100svh - 32px)}
+dialog.sol::backdrop{background:#0009}
+dialog.sol form{border:0;background:none}
+dialog.sol h2{font-size:1.5rem;color:var(--cempa-claro)}
+.opciones{display:flex;flex-wrap:wrap;gap:10px}
+.opciones label{display:flex;gap:8px;align-items:center;border:1px solid var(--linea);border-radius:999px;padding:8px 14px;cursor:pointer;background:var(--noche)}
+.opciones label:has(input:checked){border-color:var(--cempa);background:color-mix(in srgb,var(--cempa) 18%,transparent)}
+.opciones input{accent-color:var(--cempa)}
+/* panel de la organizadora */
+#vista-admin .envoltura{max-width:960px}
+.adm-caja{max-width:420px}
+.adm-seccion{display:grid;gap:12px;margin-top:28px}
+.adm-seccion h2{font-size:1.5rem}
+.adm-fila{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--noche-2);border:1px solid var(--linea);border-radius:12px;padding:10px 12px}
+.adm-fila img{width:52px;height:64px;object-fit:cover;border-radius:26px 26px 6px 6px}
+.adm-fila strong{font-family:var(--display);font-weight:400;font-size:1.1rem;overflow-wrap:anywhere}
+.adm-fila .meta{font-size:.82rem;color:var(--tenue);overflow-wrap:anywhere}
+.adm-fila .acciones{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.adm-fila .acciones .btn{padding:7px 14px;font-size:.85rem}
+.btn-peligro{background:transparent;color:#ff8fb5;box-shadow:inset 0 0 0 2px #ff8fb5}
+.adm-editar{grid-column:1/-1;display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));border-top:1px solid var(--linea);padding-top:12px}
+.adm-editar .ancho{grid-column:1/-1}
+.adm-sol{background:var(--noche-2);border:1px solid var(--linea);border-left:4px solid var(--rosa);border-radius:12px;padding:12px 14px;display:grid;gap:6px}
+.adm-sol.hecha{border-left-color:var(--linea);opacity:.6}
+.adm-sol p{margin:0;overflow-wrap:anywhere}
+.adm-sol .meta{font-size:.82rem;color:var(--tenue)}
+.adm-sol .acciones{display:flex;gap:8px;flex-wrap:wrap}
+.adm-sol .acciones .btn{padding:7px 14px;font-size:.85rem}
+input[type=search],input[type=email],input[type=password]{background:var(--noche);border:1px solid var(--linea);border-radius:10px;padding:11px 12px;width:100%;box-sizing:border-box}
 /* aviso para pasar a pantalla completa en el proyector */
 .entrar-completa{position:absolute;inset:0;z-index:6;display:grid;place-items:center;background:color-mix(in srgb,var(--noche) 55%,transparent);border:0;color:var(--texto);cursor:pointer;font:inherit}
 .entrar-completa span{background:var(--noche-2);border:2px solid var(--cempa);border-radius:18px;padding:18px 28px;font-size:clamp(1rem,2vw,1.4rem);font-weight:600;display:grid;gap:4px;text-align:center}
@@ -314,10 +367,10 @@ textarea{resize:vertical;min-height:84px}
           <summary>Aviso de privacidad simplificado</summary>
           <div>
             <p><strong>Responsable.</strong> Adriana Villalvazo, creadora y organizadora del Altar de Muertos Virtual, es responsable del uso de los datos que compartes aquí.</p>
-            <p><strong>Qué datos se recaban.</strong> De la persona o personaje que recuerdas: su foto, nombre, años, quién fue, de dónde era, sus comidas, bebidas y dulces favoritos, hasta tres platillos propios con foto y un mensaje opcional. De quien pone la ofrenda: su nombre y, si quiere, su relación con la persona recordada; ambos se muestran en el altar. No pedimos datos sensibles ni datos de contacto.</p>
+            <p><strong>Qué datos se recaban.</strong> De la persona o personaje que recuerdas: su foto, nombre, años, quién fue, de dónde era, sus comidas, bebidas y dulces favoritos, hasta tres platillos propios con foto y un mensaje opcional. De quien pone la ofrenda: su nombre y, si quiere, su relación con la persona recordada; ambos se muestran en el altar. No pedimos datos sensibles. Si pides una corrección o el borrado de una ofrenda, puedes dejar un teléfono o correo opcional, que solo ve la organizadora y se usa únicamente para atender tu solicitud.</p>
             <p><strong>Para qué se usan.</strong> Únicamente para mostrarlos en este altar virtual: proyectados en el evento presencial del 30 de octubre de 2026 y publicados en una versión en línea del altar, que puede compartirse en redes sociales, del 30 de octubre al 2 de noviembre de 2026. No se venden, no se usan con fines comerciales ni se comparten con terceros. Se guardan en los servicios donde está alojado el altar (Supabase y GitHub Pages), que funcionan solo como proveedores de almacenamiento.</p>
             <p><strong>Cuánto tiempo.</strong> Las ofrendas y la versión en línea se eliminan después del 2 de noviembre de 2026.</p>
-            <p><strong>Tus derechos.</strong> Puedes pedir en cualquier momento que se corrija o se quite tu ofrenda, o ejercer tus derechos de acceso, rectificación, cancelación y oposición, solicitándolo a la organizadora del altar.</p>
+            <p><strong>Tus derechos.</strong> Puedes pedir en cualquier momento que se corrija o se quite tu ofrenda con el enlace “Pedir corrección” de cada ofrenda o al pie de esta página, o ejercer tus derechos de acceso, rectificación, cancelación y oposición, solicitándolo a la organizadora del altar.</p>
             <p><strong>Tu compromiso.</strong> Al subir una ofrenda confirmas que tienes derecho a compartir esa foto y esos datos, y que cuentas con el permiso de la familia cuando corresponda.</p>
           </div>
         </details>
@@ -336,6 +389,7 @@ textarea{resize:vertical;min-height:84px}
         <span class="cuenta" id="listo-cuenta"></span>
         <p class="aviso" id="listo-regreso"></p>
         <button class="btn btn-secundario" id="otra" type="button">Poner otra ofrenda</button>
+        <button class="enlace-sol" id="listo-sol" type="button">¿Algo quedó mal? Pide una corrección</button>
       </div>
       <section class="lista" id="lista" aria-labelledby="t-lista" hidden>
         <h2 id="t-lista">En el altar</h2>
@@ -344,10 +398,60 @@ textarea{resize:vertical;min-height:84px}
       </section>
     </div>
     <footer class="creditos">
-      <p class="organiza"><a href="#pantalla">Pantalla del evento</a><a href="#altar">Altar completo</a></p>
+      <p class="organiza"><a href="#pantalla">Pantalla del evento</a><a href="#altar">Altar completo</a><button class="enlace-sol" id="pie-sol" type="button">Pedir corrección o borrado de una ofrenda</button></p>
       <p><strong>Altar de Muertos Virtual</strong> · Idea y creación: Adriana Villalvazo · Delegación de Artes y Humanidades, STAUdG · 2026</p>
       <p>© 2026 Adriana Villalvazo. Todos los derechos reservados. Uso reservado: prohibida su reproducción, copia o uso comercial sin autorización de la autora. Las fotos y textos de cada ofrenda pertenecen a quien los comparte. <a href="#ofrenda" id="ver-aviso" style="color:var(--cempa-claro)">Aviso de privacidad</a></p>
     </footer>
+  </div>
+</section>
+
+<dialog class="sol" id="dlg-sol">
+  <form id="form-sol" method="dialog" novalidate>
+    <h2>Pedir corrección o borrado</h2>
+    <p class="guia" style="margin:0;color:var(--tenue)">Le llega a la organizadora del altar, que hace el cambio.</p>
+    <input type="hidden" id="sol-id">
+    <label class="campo">¿A quién recordamos en esa ofrenda?
+      <input type="text" id="sol-nombre" maxlength="60" placeholder="Ej. Abuelita Chela">
+    </label>
+    <div class="campo" style="display:grid;gap:8px"><span style="font-weight:600">¿Qué necesitas?</span>
+      <div class="opciones">
+        <label><input type="radio" name="sol-tipo" value="corregir" checked> Corregir un dato</label>
+        <label><input type="radio" name="sol-tipo" value="borrar"> Quitar la ofrenda</label>
+      </div>
+    </div>
+    <label class="campo"><span id="sol-msg-eti">¿Qué hay que corregir?</span>
+      <textarea id="sol-mensaje" maxlength="400" placeholder="Ej. Su nombre se escribe Graciela, no Gabriela"></textarea>
+    </label>
+    <label class="campo">Tu teléfono o correo <small>opcional, por si hay que preguntarte algo; solo lo ve la organizadora</small>
+      <input type="text" id="sol-contacto" maxlength="80" placeholder="Ej. 33 1234 5678">
+    </label>
+    <p class="aviso" id="sol-aviso" role="status"></p>
+    <div class="nav-pasos">
+      <button class="btn btn-secundario" id="sol-cerrar" type="button">Cerrar</button>
+      <button class="btn btn-principal" id="sol-enviar" type="submit">Enviar</button>
+    </div>
+  </form>
+</dialog>
+
+<section id="vista-admin" hidden>
+  <div class="envoltura">
+    <header class="cabecera">
+      <div><h1>Panel de la organizadora</h1><p id="adm-quien">Solo para quien administra el altar.</p></div>
+      <div class="enlaces"><a class="btn btn-secundario" href="#ofrenda">Volver al altar</a><button class="btn btn-secundario" id="adm-salir" type="button" hidden>Salir</button></div>
+    </header>
+    <form class="adm-caja" id="adm-login" novalidate style="display:grid;gap:14px">
+      <label class="campo">Correo<input type="email" id="adm-correo" autocomplete="username"></label>
+      <label class="campo">Contraseña<input type="password" id="adm-clave" autocomplete="current-password"></label>
+      <button class="btn btn-principal" type="submit" style="justify-self:start">Entrar</button>
+      <p class="aviso" id="adm-aviso" role="status"></p>
+    </form>
+    <div id="adm-panel" hidden>
+      <section class="adm-seccion"><h2>Solicitudes</h2><p class="aviso" id="adm-sol-conteo"></p><div id="adm-solicitudes" style="display:grid;gap:10px"></div></section>
+      <section class="adm-seccion"><h2>Ofrendas</h2>
+        <input type="search" id="adm-buscar" placeholder="Buscar por nombre o por quien la puso">
+        <p class="aviso" id="adm-of-aviso" role="status"></p>
+        <div id="adm-ofrendas" style="display:grid;gap:10px"></div></section>
+    </div>
   </div>
 </section>
 
@@ -494,11 +598,45 @@ textarea{resize:vertical;min-height:84px}
       if (paso !== 5) irA(5);
       $("listo-num").textContent = turno || "--"; $("listo-regreso").textContent = regreso.trim();
       if (falta <= 0){ clearInterval(reloj); $("listo-txt").textContent = "¡" + nueva.nombre + " ya está en el altar! Mírala en la pantalla."; $("listo-cuenta").textContent = ""; return; }
-      $("listo-txt").textContent = "Acércate al altar: " + nueva.nombre + " sale en la pantalla a las " + hora(p.ini);
+      const cual = altaresEnUso(prog, Date.now()) > 1 || p.carril > 0 ? ", en el altar " + (p.carril + 1) : "";
+      $("listo-txt").textContent = "Acércate al altar: " + nueva.nombre + " sale en la pantalla" + cual + " a las " + hora(p.ini);
       $("listo-cuenta").textContent = "Faltan " + dura(falta);
     };
     paso(); reloj = setInterval(paso, 1000);
   }
+
+  // pedir corrección o borrado: le llega a la organizadora
+  let enviarSolicitud = null, iniciarAdmin = null, ultimaOfrenda = null;
+  const tipoSol = () => document.querySelector('input[name="sol-tipo"]:checked').value;
+  function abrirSolicitud(o){
+    $("form-sol").reset(); $("sol-aviso").textContent = ""; $("sol-enviar").disabled = false; $("sol-enviar").hidden = false;
+    $("sol-id").value = o?.id || ""; $("sol-nombre").value = o?.nombre || "";
+    pintarTipoSol(); $("dlg-sol").showModal();
+  }
+  function pintarTipoSol(){
+    const borrar = tipoSol() === "borrar";
+    $("sol-msg-eti").textContent = borrar ? "¿Por qué hay que quitarla? (opcional)" : "¿Qué hay que corregir?";
+    $("sol-mensaje").placeholder = borrar ? "Ej. La subí por error" : "Ej. Su nombre se escribe Graciela, no Gabriela";
+  }
+  document.querySelectorAll('input[name="sol-tipo"]').forEach(x => x.onchange = pintarTipoSol);
+  $("sol-cerrar").onclick = () => $("dlg-sol").close();
+  $("listo-sol").onclick = () => abrirSolicitud(ultimaOfrenda);
+  $("pie-sol").onclick = () => abrirSolicitud(null);
+  $("form-sol").addEventListener("submit", async e => {
+    e.preventDefault();
+    const av = (t, tipo) => { $("sol-aviso").textContent = t; $("sol-aviso").className = "aviso" + (tipo ? " " + tipo : ""); };
+    const tipo = tipoSol(), nombre = $("sol-nombre").value.trim();
+    let mensaje = $("sol-mensaje").value.trim();
+    if (!nombre) return av("Escribe a quién recordamos en esa ofrenda.", "error");
+    if (tipo === "corregir" && !mensaje) return av("Cuéntanos qué hay que corregir.", "error");
+    if (!mensaje) mensaje = "Quitar la ofrenda";
+    $("sol-enviar").disabled = true; av("Enviando…");
+    try {
+      if (!enviarSolicitud) throw 0;
+      await enviarSolicitud({ofrendaId:$("sol-id").value || null, nombre, tipo, mensaje, contacto:$("sol-contacto").value.trim()});
+      av("Listo, la organizadora ya recibió tu solicitud. Gracias.", "ok"); $("sol-enviar").hidden = true;
+    } catch { av("No se pudo enviar. Revisa tu conexión e intenta de nuevo.", "error"); $("sol-enviar").disabled = false; }
+  });
 
   // pasos del formulario
   let paso = 0;
@@ -547,7 +685,7 @@ textarea{resize:vertical;min-height:84px}
         ofrendas = l; pintarTodo();
       }
       $("form").reset(); limpiarFotos(); pintarChips(); $("form").scrollIntoView({behavior:"smooth",block:"start"});
-      esperar(o);
+      ultimaOfrenda = o; esperar(o);
     } catch (err) {
       const c = err && (err.statusCode || err.code || err.error);
       aviso(c==="413" || c==="Payload too large" ? "La foto es demasiado pesada. Prueba con otra."
@@ -581,7 +719,9 @@ textarea{resize:vertical;min-height:84px}
       if (todo.length){ const sp=document.createElement("span"); sp.textContent=todo.join(" · "); d.appendChild(sp); }
       if (o.autor){ const sp=document.createElement("span"); sp.textContent="Puesta por "+o.autor+(o.relacion?" ("+o.relacion+")":""); d.appendChild(sp); }
       const pr = prog.find(x => x.o === o);
-      if (pr){ const sp=document.createElement("span"); sp.className="turno"; sp.textContent="Turno "+turnoDe(prog, pr)+(pr.ini > Date.now() ? " · entra a las "+hora(pr.ini) : ""); d.appendChild(sp); }
+      if (pr){ const sp=document.createElement("span"); sp.className="turno"; sp.textContent="Turno "+turnoDe(prog, pr)+(pr.carril > 0 ? " · altar "+(pr.carril+1) : "")+(pr.ini > Date.now() ? " · entra a las "+hora(pr.ini) : ""); d.appendChild(sp); }
+      const ps = document.createElement("button"); ps.type = "button"; ps.className = "enlace-sol"; ps.textContent = "Pedir corrección";
+      ps.onclick = () => abrirSolicitud(o); d.appendChild(ps);
       if (puedeBorrar){ const b=document.createElement("button"); b.type="button"; b.textContent="Quitar";
         b.onclick = () => { if (b.dataset.seguro){ borrar(o.id); } else { b.dataset.seguro="1"; b.textContent="¿Seguro? Toca otra vez"; } };
         d.appendChild(b); }
@@ -709,7 +849,7 @@ textarea{resize:vertical;min-height:84px}
     [[24,"#2e7d4f",54],[976,"#2e7d4f",54]].forEach(([x,c,h]) => g += veladora(x, 808, h, c, id));
     return `<svg viewBox="0 70 1000 830" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${o ? "Retrato de " + esc(o.nombre) : "Retrato enmarcado de cempasúchil"}">${g}</svg>`;
   }
-  const enPantalla = () => location.hash === "#pantalla";
+  const enPantalla = () => location.hash.startsWith("#pantalla");
 
   function altarSVG(o){
     const id = ++uid, rnd = azar(7);
@@ -771,25 +911,34 @@ textarea{resize:vertical;min-height:84px}
   // Todo sale de los datos y la hora, así que todas las pantallas muestran lo mismo.
   const RETRASO = 90e3, ESTRENO = 60e3, ESTRENO_MIN = 30e3, ESPERA_HOLGADA = 5*60e3, ESPERA_MAX = 15*60e3;
   const rota = n => n <= 20 ? 20e3 : n <= 60 ? 15e3 : 12e3;
+  // Si aun el altar más libre haría esperar más de ESPERA_OTRO_ALTAR, se abre otro altar (hasta MAX_ALTARES)
+  // y la pantalla se divide. Cuando la fila se vacía, se vuelve a un solo altar.
+  const ESPERA_OTRO_ALTAR = 60*60e3, MAX_ALTARES = 4;
   function programa(lista){
-    let fin = 0;
+    const libre = [0];   // hora en que se desocupa cada altar abierto
     return [...lista].sort((a,b) => (a.creado||0) - (b.creado||0)).map(o => {
-      const ini = Math.max((o.creado||0) + RETRASO, fin);
+      const listo = (o.creado||0) + RETRASO;
+      if (libre.every(f => f <= listo)) libre.length = 1;
+      let c = 0; libre.forEach((f,i) => { if (f < libre[c]) c = i; });
+      if (libre[c] - listo > ESPERA_OTRO_ALTAR && libre.length < MAX_ALTARES){ c = libre.length; libre.push(0); }
+      const ini = Math.max(listo, libre[c]);
       const k = Math.min(1, Math.max(0, (ini - (o.creado||0) - ESPERA_HOLGADA) / (ESPERA_MAX - ESPERA_HOLGADA)));
       const dur = Math.round(ESTRENO - k*(ESTRENO - ESTRENO_MIN));
-      fin = ini + dur;
-      return {o, ini, fin};
+      libre[c] = ini + dur;
+      return {o, ini, fin: ini + dur, carril: c};
     });
   }
+  // cuántos altares hay en uso ahora (los que tienen estreno en curso o pendiente)
+  const altaresEnUso = (prog, ahora) => prog.reduce((m, p) => p.fin > ahora ? Math.max(m, p.carril + 1) : m, 1);
   const dura = ms => { const s = Math.max(0, Math.round(ms/1000)), m = Math.floor(s/60); return m ? `${m} min${s%60 ? " " + (s%60) + " s" : ""}` : `${s} s`; };
   const hora = t => new Date(t).toLocaleTimeString("es-MX", {hour:"numeric", minute:"2-digit"});
 
   const turnoDe = (prog, p) => String(prog.indexOf(p) + 1).padStart(2, "0");
   const reloj2 = ms => { const s = Math.max(0, Math.ceil(ms/1000)); return Math.floor(s/60) + ":" + String(s%60).padStart(2,"0"); };
-  function pintarFila(prog, estreno, ahora){
-    const filas = [];
-    if (estreno) filas.push({cls:"ahora", n:turnoDe(prog, estreno), nombre:estreno.o.nombre, t:"ahora"});
-    prog.filter(p => p.ini > ahora).slice(0, estreno ? 3 : 4).forEach(p => filas.push({cls:"", n:turnoDe(prog, p), nombre:p.o.nombre, t:"en " + reloj2(p.ini - ahora)}));
+  function pintarFila(prog, estrenos, ahora, varios, fijo){
+    const filas = [], deAqui = p => fijo == null || p.carril === fijo, altar = p => varios ? " · altar " + (p.carril + 1) : "";
+    estrenos.filter(deAqui).forEach(e => filas.push({cls:"ahora", n:turnoDe(prog, e), nombre:e.o.nombre, t:"ahora" + altar(e)}));
+    prog.filter(p => p.ini > ahora && deAqui(p)).slice(0, Math.max(2, 5 - filas.length)).forEach(p => filas.push({cls:"", n:turnoDe(prog, p), nombre:p.o.nombre, t:"en " + reloj2(p.ini - ahora) + altar(p)}));
     const ol = $("fila"); ol.textContent = "";
     filas.forEach(f => { const li = document.createElement("li"); li.className = f.cls;
       const b = document.createElement("b"); b.textContent = f.n; const sp = document.createElement("span"); sp.textContent = f.nombre; const em = document.createElement("em"); em.textContent = f.t;
@@ -797,26 +946,50 @@ textarea{resize:vertical;min-height:84px}
     $("fila-vacia").hidden = filas.length > 0;
   }
 
-  let desfase = 0, temporizador = null, mostradoId = null;
+  let desfase = 0, temporizador = null, mostradoId = null, paneles = [];
+  // #pantalla-2 muestra solo el altar 2 (para mandar cada altar a un monitor distinto)
+  const altarFijo = () => { const m = location.hash.match(/^#pantalla-(\d)$/); return m ? Math.min(MAX_ALTARES, Math.max(1, +m[1])) - 1 : null; };
   function pintarAltar(){
     const escena = $("escena"), des = $("desfile"), ahora = Date.now();
-    const prog = programa(ofrendas);
-    const estreno = prog.find(p => p.ini <= ahora && ahora < p.fin);
+    const prog = programa(ofrendas), fijo = altarFijo();
+    const enUso = altaresEnUso(prog, ahora);
+    const altares = fijo != null ? [fijo] : [...Array(enUso).keys()];
+    const varios = enUso > 1 || fijo != null;
+    const estrenos = prog.filter(p => p.ini <= ahora && ahora < p.fin);
     const vistos = prog.filter(p => p.fin <= ahora).map(p => p.o);
     const prox = prog.find(p => p.ini > ahora);
-    let o = null;
-    if (estreno) o = estreno.o;
-    else if (vistos.length) o = vistos[(((Math.floor(ahora/rota(vistos.length)) + desfase) % vistos.length) + vistos.length) % vistos.length];
-    pintarFila(prog, estreno, ahora);
+    pintarFila(prog, estrenos, ahora, varios, fijo);
+    const va = $("vista-altar");
+    va.classList.toggle("multi", altares.length > 1);
+    ["n2","n3","n4"].forEach(c => va.classList.toggle(c, altares.length > 1 && c === "n" + altares.length));
     const enAltar = prog.filter(p => p.ini <= ahora).map(p => p.o).slice(-14);
-    const firmaDesfile = enAltar.map(x=>x.id).join() + "|" + (o?.id||"");
+    const actuales = altares.map(c => estrenos.find(p => p.carril === c)?.o).filter(Boolean);
+    const firmaDesfile = enAltar.map(x=>x.id).join() + "|" + actuales.map(x=>x.id).join();
     if (des.dataset.firma !== firmaDesfile){
       des.dataset.firma = firmaDesfile; des.textContent = "";
-      enAltar.forEach(x => { const i=new Image(); i.src=x.foto; i.alt=""; if (o && x.id===o.id) i.className="actual"; des.appendChild(i); });
+      enAltar.forEach(x => { const i=new Image(); i.src=x.foto; i.alt=""; if (actuales.includes(x)) i.className="actual"; des.appendChild(i); });
     }
-    const clave = o ? o.id + (estreno ? "*" : "") : "__vacio";
-    if (clave === mostradoId) return;
-    mostradoId = clave;
+    if (paneles.length !== altares.length || paneles.some((p,i) => p.carril !== altares[i])){
+      escena.textContent = "";
+      paneles = altares.map(c => { const el = document.createElement("div"); el.className = "panel"; escena.appendChild(el); return {el, carril:c, clave:null}; });
+    }
+    if (mostradoId === null){ paneles.forEach(p => p.clave = null); mostradoId = "listo"; }
+    paneles.forEach((pan, i) => {
+      const estreno = estrenos.find(p => p.carril === pan.carril);
+      let o = null;
+      if (estreno) o = estreno.o;
+      else if (vistos.length){
+        const salto = pan.carril * Math.max(1, Math.floor(vistos.length / MAX_ALTARES));
+        o = vistos[(((Math.floor(ahora/rota(vistos.length)) + desfase + salto) % vistos.length) + vistos.length) % vistos.length];
+      }
+      pintarPanel(pan, o, estreno, prox, varios);
+    });
+  }
+  function pintarPanel(pan, o, estreno, prox, varios){
+    const escena = pan.el;
+    const clave = (o ? o.id + (estreno ? "*" : "") : "__vacio") + (varios ? "|" + pan.carril : "");
+    if (clave === pan.clave) return;
+    pan.clave = clave;
     const r = document.createElement("div"); r.className = "retrato";
     r.innerHTML = (enPantalla() ? retratoSVG(o) : altarSVG(o)) + '<div class="datos"></div>';
     const dat = r.querySelector(".datos");
@@ -853,7 +1026,8 @@ textarea{resize:vertical;min-height:84px}
       if (o.mensaje) add("blockquote","","“"+o.mensaje+"”");
       if (o.autor) add("div","firma","Con cariño de "+o.autor+(o.relacion?", "+o.relacion.toLowerCase():""));
     }
-    const viejos = [...escena.children];
+    if (varios){ const n = document.createElement("span"); n.className = "num-altar"; n.textContent = "Altar " + (pan.carril + 1); r.appendChild(n); }
+    const viejos = [...escena.querySelectorAll(".retrato")];
     viejos.forEach(v => { v.classList.remove("visible"); setTimeout(()=>v.remove(), 1000); });
     escena.appendChild(r);
     requestAnimationFrame(()=>requestAnimationFrame(()=>r.classList.add("visible")));
@@ -902,9 +1076,11 @@ textarea{resize:vertical;min-height:84px}
 
   // rutas
   async function ruta(){
-    const altar = location.hash === "#altar" || location.hash === "#pantalla";
-    $("vista-altar").classList.toggle("modo-pantalla", location.hash === "#pantalla");
-    $("vista-altar").hidden = !altar; $("vista-ofrenda").hidden = altar;
+    const altar = location.hash === "#altar" || enPantalla(), admin = location.hash === "#admin";
+    if ($("dlg-sol").open) $("dlg-sol").close();
+    $("vista-altar").classList.toggle("modo-pantalla", enPantalla());
+    $("vista-altar").hidden = !altar; $("vista-ofrenda").hidden = altar || admin; $("vista-admin").hidden = !admin;
+    if (admin){ if (iniciarAdmin) iniciarAdmin(); else $("adm-aviso").textContent = "El panel de la organizadora funciona en el sitio del altar."; }
     if (altar){
       mostradoId = null; pintarAltar(); arrancarCarrusel(); iniciarPetalos();
       ocultar = setTimeout(()=>$("vista-altar").classList.add("quieto"), 2500);
@@ -917,7 +1093,7 @@ textarea{resize:vertical;min-height:84px}
   addEventListener("hashchange", ruta);
   ruta();
   // en proyección, el primer toque pasa a pantalla completa (oculta la barra con la dirección)
-  const completa = () => { $("entrar-completa").hidden = !!document.fullscreenElement || location.hash !== "#pantalla" || !document.documentElement.requestFullscreen; };
+  const completa = () => { $("entrar-completa").hidden = !!document.fullscreenElement || !enPantalla() || !document.documentElement.requestFullscreen; };
   addEventListener("hashchange", completa); document.addEventListener("fullscreenchange", completa); completa();
   $("entrar-completa").onclick = async () => { try { await document.documentElement.requestFullscreen(); } catch {} completa(); };
 
@@ -971,6 +1147,141 @@ textarea{resize:vertical;min-height:84px}
     sb.channel("ofrendas").on("postgres_changes", {event:"*", schema:"public", table:"ofrendas"}, cargar).subscribe();
     setInterval(cargar, 20000);   // respaldo por si se cae la conexión en vivo
   }
+
+  // solicitudes de corrección o borrado: cualquiera las envía, solo la organizadora las lee
+  const esUuid = t => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(t || "");
+  enviarSolicitud = async s => {
+    if (!sb) throw new Error("sin conexión");
+    const {error} = await sb.from("solicitudes").insert({ofrenda_id: esUuid(s.ofrendaId) ? s.ofrendaId : null, nombre:s.nombre, tipo:s.tipo, mensaje:s.mensaje, contacto:s.contacto || null});
+    if (error) throw error;
+  };
+
+  // panel de la organizadora (#admin): entra con su correo y contraseña de Supabase
+  let adm = null, admListo = false;
+  iniciarAdmin = async () => {
+    $("adm-aviso").textContent = "";
+    if (!sb){ $("adm-aviso").textContent = "Sin conexión con el altar."; return; }
+    if (!adm){
+      adm = window.supabase.createClient(cfg.url, cfg.llave, {auth:{persistSession:true, storageKey:"altar-organizadora"}});
+      $("adm-login").addEventListener("submit", async e => {
+        e.preventDefault(); $("adm-aviso").textContent = "Entrando…"; $("adm-aviso").className = "aviso";
+        const {error} = await adm.auth.signInWithPassword({email:$("adm-correo").value.trim(), password:$("adm-clave").value});
+        if (error){ $("adm-aviso").textContent = "Correo o contraseña incorrectos."; $("adm-aviso").className = "aviso error"; return; }
+        $("adm-clave").value = ""; mostrarAdmin();
+      });
+      $("adm-salir").onclick = async () => { await adm.auth.signOut(); mostrarAdmin(); };
+      $("adm-buscar").addEventListener("input", pintarAdmOfrendas);
+    }
+    mostrarAdmin();
+  };
+  async function mostrarAdmin(){
+    const {data:{session}} = await adm.auth.getSession();
+    let ok = false;
+    if (session){ const {data} = await adm.rpc("es_admin"); ok = data === true; }
+    $("adm-login").hidden = !!session && ok; $("adm-panel").hidden = !ok; $("adm-salir").hidden = !session;
+    $("adm-quien").textContent = session ? (ok ? "Entraste como " + session.user.email + "." : session.user.email + " no tiene permiso de organizadora.") : "Solo para quien administra el altar.";
+    if (ok){ admListo = true; cargarSolicitudes(); pintarAdmOfrendas(); }
+  }
+  let solicitudes = [];
+  async function cargarSolicitudes(){
+    const {data, error} = await adm.from("solicitudes").select("*").order("atendida").order("created_at", {ascending:false}).limit(300);
+    if (error){ $("adm-sol-conteo").textContent = "No se pudieron leer las solicitudes."; return; }
+    solicitudes = data; pintarSolicitudes();
+  }
+  function pintarSolicitudes(){
+    const caja = $("adm-solicitudes"); caja.textContent = "";
+    const pend = solicitudes.filter(x => !x.atendida).length;
+    $("adm-sol-conteo").textContent = solicitudes.length ? (pend ? pend + (pend === 1 ? " pendiente" : " pendientes") : "Todo atendido.") : "Todavía no hay solicitudes.";
+    const prog = programa(ofrendas);
+    solicitudes.forEach(x => {
+      const el = document.createElement("article"); el.className = "adm-sol" + (x.atendida ? " hecha" : "");
+      const t = document.createElement("p"); const b = document.createElement("strong");
+      b.textContent = (x.tipo === "borrar" ? "Quitar · " : "Corregir · ") + x.nombre; t.appendChild(b);
+      const m = document.createElement("p"); m.textContent = x.mensaje;
+      const meta = document.createElement("p"); meta.className = "meta";
+      const of = ofrendas.find(o => o.id === x.ofrenda_id), pr = of && prog.find(p => p.o === of);
+      meta.textContent = new Date(x.created_at).toLocaleString("es-MX", {dateStyle:"short", timeStyle:"short"}) + (x.contacto ? " · Contacto: " + x.contacto : "") + (pr ? " · Turno " + turnoDe(prog, pr) : x.ofrenda_id ? " · (ya no está)" : "");
+      const acc = document.createElement("div"); acc.className = "acciones";
+      if (of){ const v = document.createElement("button"); v.type = "button"; v.className = "btn btn-secundario"; v.textContent = "Ver ofrenda";
+        v.onclick = () => { $("adm-buscar").value = of.nombre; pintarAdmOfrendas(); $("adm-buscar").scrollIntoView({behavior:"smooth"}); }; acc.appendChild(v); }
+      const h = document.createElement("button"); h.type = "button"; h.className = "btn btn-secundario"; h.textContent = x.atendida ? "Marcar pendiente" : "Marcar atendida";
+      h.onclick = async () => { const {error} = await adm.from("solicitudes").update({atendida: !x.atendida}).eq("id", x.id); if (!error) cargarSolicitudes(); };
+      acc.appendChild(h);
+      el.append(t, m, meta, acc); caja.appendChild(el);
+    });
+  }
+  function pintarAdmOfrendas(){
+    if (!admListo) return;
+    const caja = $("adm-ofrendas"), q = $("adm-buscar").value.trim().toLowerCase(), prog = programa(ofrendas);
+    caja.textContent = "";
+    const lista = [...ofrendas].reverse().filter(o => !q || (o.nombre + " " + o.autor).toLowerCase().includes(q));
+    $("adm-of-aviso").textContent = lista.length + (lista.length === 1 ? " ofrenda" : " ofrendas") + (q ? " encontradas" : " en el altar");
+    lista.slice(0, 200).forEach(o => {
+      const el = document.createElement("article"); el.className = "adm-fila";
+      const img = new Image(); img.src = o.foto; img.alt = ""; img.loading = "lazy";
+      const d = document.createElement("div"); const s = document.createElement("strong"); s.textContent = o.nombre;
+      const pr = prog.find(p => p.o === o);
+      const meta = document.createElement("div"); meta.className = "meta";
+      meta.textContent = (pr ? "Turno " + turnoDe(prog, pr) + " · " : "") + "Puesta por " + (o.autor || "—") + " · " + new Date(o.creado).toLocaleString("es-MX", {dateStyle:"short", timeStyle:"short"});
+      d.append(s, meta);
+      const acc = document.createElement("div"); acc.className = "acciones";
+      const ed = document.createElement("button"); ed.type = "button"; ed.className = "btn btn-secundario"; ed.textContent = "Corregir";
+      const bo = document.createElement("button"); bo.type = "button"; bo.className = "btn btn-peligro"; bo.textContent = "Borrar";
+      ed.onclick = () => { const f = el.querySelector(".adm-editar"); if (f) f.remove(); else el.appendChild(formEditar(o)); };
+      bo.onclick = async () => {
+        if (!confirm("¿Borrar la ofrenda de " + o.nombre + "? No se puede deshacer.")) return;
+        bo.disabled = true;
+        const {error} = await adm.from("ofrendas").delete().eq("id", o.id);
+        if (error){ alert("No se pudo borrar: " + error.message); bo.disabled = false; return; }
+        const {data:archivos} = await adm.storage.from("fotos").list(o.id);
+        if (archivos?.length) await adm.storage.from("fotos").remove(archivos.map(a => o.id + "/" + a.name));
+        await cargar(); pintarAdmOfrendas(); pintarSolicitudes();
+      };
+      acc.append(ed, bo); el.append(img, d, acc); caja.appendChild(el);
+    });
+  }
+  function formEditar(o){
+    const f = document.createElement("form"); f.className = "adm-editar"; f.noValidate = true;
+    const campos = [["nombre","Nombre",60,o.nombre],["anios","Años",30,o.anios],["quien_fue","Quién fue",80,o.quienFue],["origen","De dónde era",60,o.origen],
+      ["autor","Quién la pone",60,o.autor],["relacion","Relación",40,o.relacion]];
+    const inp = {};
+    const campo = (k, eti, max, val, ancho, area) => { const l = document.createElement("label"); l.className = "campo" + (ancho ? " ancho" : ""); l.textContent = eti;
+      const i = document.createElement(area ? "textarea" : "input"); if (!area) i.type = "text"; i.maxLength = max; i.value = val || ""; l.appendChild(i); f.appendChild(l); inp[k] = i; };
+    campos.forEach(c => campo(...c));
+    campo("comidas", "Comidas (separadas por comas)", 600, (o.comidas||[]).join(", "), true);
+    [0,1,2].forEach(i => campo("pl"+i, "Platillo " + (i+1), 40, (o.platillos||[])[i]?.nombre || ""));
+    campo("mensaje", "Mensaje", 220, o.mensaje, true, true);
+    const lf = document.createElement("label"); lf.className = "campo ancho"; lf.textContent = "Cambiar la foto (opcional)";
+    const archivo = document.createElement("input"); archivo.type = "file"; archivo.accept = "image/*"; lf.appendChild(archivo); f.appendChild(lf);
+    const pie = document.createElement("div"); pie.className = "ancho nav-pasos";
+    const av = document.createElement("p"); av.className = "aviso";
+    const g = document.createElement("button"); g.type = "submit"; g.className = "btn btn-principal"; g.textContent = "Guardar cambios";
+    pie.append(av, g); f.appendChild(pie);
+    f.addEventListener("submit", async e => {
+      e.preventDefault();
+      if (!inp.nombre.value.trim() || !inp.autor.value.trim()){ av.textContent = "El nombre y quién la pone no pueden quedar vacíos."; av.className = "aviso error"; return; }
+      g.disabled = true; av.textContent = "Guardando…"; av.className = "aviso";
+      try {
+        const cambios = {};
+        ["nombre","anios","quien_fue","origen","autor","relacion","mensaje"].forEach(k => cambios[k] = inp[k].value.trim());
+        cambios.comidas = inp.comidas.value.split(",").map(x => x.trim()).filter(Boolean).slice(0,14);
+        const viejos = o.platillos || [];
+        cambios.platillos = [0,1,2].map(i => ({nombre: inp["pl"+i].value.trim(), foto: viejos[i]?.foto || null})).filter(x => x.nombre || x.foto);
+        if (archivo.files[0]){
+          const url = await reducir(archivo.files[0], 105000);
+          const ruta = o.id + "/retrato-" + Date.now() + ".jpg";
+          const {error:eu} = await adm.storage.from("fotos").upload(ruta, await aBlob(url), {contentType:"image/jpeg", upsert:false});
+          if (eu) throw eu;
+          cambios.foto = adm.storage.from("fotos").getPublicUrl(ruta).data.publicUrl;
+        }
+        const {error} = await adm.from("ofrendas").update(cambios).eq("id", o.id);
+        if (error) throw error;
+        await cargar(); pintarAdmOfrendas();
+      } catch (err) { av.textContent = "No se pudo guardar: " + (err.message || "revisa tu conexión"); av.className = "aviso error"; g.disabled = false; }
+    });
+    return f;
+  }
+  if (location.hash === "#admin") iniciarAdmin();
 })();
 </script>
 </body>
