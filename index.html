@@ -132,7 +132,9 @@ textarea{resize:vertical;min-height:84px}
 @keyframes flama{0%{transform:scale(1,1) rotate(-2deg)}50%{transform:scale(.9,1.12) rotate(2deg)}100%{transform:scale(1.06,.94) rotate(-1deg)}}
 @keyframes halo{from{opacity:.75}to{opacity:1}}
 @keyframes humo{0%{opacity:0;transform:translateY(0)}20%{opacity:.5}100%{opacity:0;transform:translateY(-120px)}}
-.datos{min-width:0;max-height:100%;overflow:hidden;display:grid;gap:clamp(6px,1.2vh,14px);align-content:center;max-width:34em}
+.datos{min-width:0;max-height:100%;overflow:hidden;display:grid;align-content:center;max-width:34em}
+.datos-in{min-width:0;display:grid;gap:clamp(6px,1.2vh,14px);align-content:center}
+#vista-altar.multi .datos-in{gap:clamp(4px,.8vh,10px)}
 .datos .eti{font-size:clamp(.75rem,1.1vw,1rem);letter-spacing:.18em;text-transform:uppercase;color:var(--cempa-claro)}
 .datos h2{font-size:clamp(1.5rem,3.4vw,3.4rem);line-height:1.05;overflow-wrap:anywhere}
 .datos .anios{font-size:clamp(.85rem,1.25vw,1.15rem);color:var(--tenue)}
@@ -1032,8 +1034,8 @@ input[type=search],input[type=email],input[type=password]{background:var(--noche
     if (clave === pan.clave) return;
     pan.clave = clave;
     const r = document.createElement("div"); r.className = "retrato";
-    r.innerHTML = (enPantalla() ? retratoSVG(o) : altarSVG(o)) + '<div class="datos"></div>';
-    const dat = r.querySelector(".datos");
+    r.innerHTML = (enPantalla() ? retratoSVG(o) : altarSVG(o)) + '<div class="datos"><div class="datos-in"></div></div>';
+    const dat = r.querySelector(".datos-in");
     const add = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; e.textContent = txt; dat.appendChild(e); return e; };
     if (!o){
       add("span","eti","Día de Muertos");
@@ -1072,8 +1074,16 @@ input[type=search],input[type=email],input[type=password]{background:var(--noche
     const viejos = [...escena.querySelectorAll(".retrato")];
     viejos.forEach(v => { v.classList.remove("visible"); setTimeout(()=>v.remove(), 1000); });
     escena.appendChild(r);
+    ajustarTexto(dat);
     requestAnimationFrame(()=>requestAnimationFrame(()=>r.classList.add("visible")));
   }
+  // si la ficha no cabe en su recuadro, se achica el texto poco a poco hasta que quepa completa
+  function ajustarTexto(dentro){
+    const caja = dentro.parentElement;
+    dentro.style.zoom = 1;
+    for (let z = 1; z > .45 && dentro.getBoundingClientRect().height > caja.getBoundingClientRect().height + 1; z -= .05) dentro.style.zoom = z.toFixed(2);
+  }
+  addEventListener("resize", () => { if (!$("vista-altar").hidden) document.querySelectorAll(".datos-in").forEach(ajustarTexto); });
   function arrancarCarrusel(){ clearInterval(temporizador); temporizador = setInterval(pintarAltar, 1000); }
 
   function pintarTodo(){ pintarLista(); if (!$("vista-altar").hidden) pintarAltar(); }
