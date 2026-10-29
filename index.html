@@ -244,6 +244,12 @@ textarea{resize:vertical;min-height:84px}
 #vista-altar.multi .anios,#vista-altar.multi .gustos,#vista-altar.multi .datos blockquote,#vista-altar.multi .firma{font-size:clamp(.72rem,.9vw,1rem)}
 #vista-altar.multi .mini-platos img{width:clamp(30px,3vw,50px)}
 #vista-altar.multi.n3 .datos blockquote,#vista-altar.multi.n4 .datos blockquote{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.selector-altar{position:absolute;left:50%;transform:translateX(-50%);top:calc(clamp(70px,14vh,124px) - 46px);z-index:5;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:calc(100% - 24px)}
+.selector-altar a{font-size:.85rem;font-weight:600;text-decoration:none;color:var(--texto);background:color-mix(in srgb,var(--noche) 80%,transparent);border:1px solid var(--cempa);border-radius:999px;padding:6px 14px}
+.selector-altar a[aria-current="true"]{background:var(--cempa);color:#2a1300}
+@media (max-aspect-ratio:1/1){.selector-altar .todos{display:none} .selector-altar{flex-wrap:nowrap;gap:5px} .selector-altar a{padding:5px 10px;font-size:.8rem;white-space:nowrap}
+  #vista-altar:has(.selector-altar:not([hidden])) .num-altar{display:none}}
+a.num-altar{text-decoration:none}
 /* pedir corrección o borrado */
 .enlace-sol{background:none;border:0;padding:0;color:var(--cempa-claro);text-decoration:underline;cursor:pointer;font:inherit;font-size:.9rem}
 .tarjeta .enlace-sol{font-size:.78rem;justify-self:start;margin-top:2px;color:var(--tenue)}
@@ -388,6 +394,7 @@ input[type=search],input[type=email],input[type=password]{background:var(--noche
         <p id="listo-txt"></p>
         <span class="cuenta" id="listo-cuenta"></span>
         <p class="aviso" id="listo-regreso"></p>
+        <a class="btn btn-principal" id="listo-ver" href="#altar">Verla en mi celular</a>
         <button class="btn btn-secundario" id="otra" type="button">Poner otra ofrenda</button>
         <button class="enlace-sol" id="listo-sol" type="button">¿Algo quedó mal? Pide una corrección</button>
       </div>
@@ -464,6 +471,7 @@ input[type=search],input[type=email],input[type=password]{background:var(--noche
     <a class="btn" href="#ofrenda">Agregar ofrenda</a>
   </div>
   <button class="entrar-completa" id="entrar-completa" type="button" hidden><span>Toca para ver en pantalla completa<small>Así se oculta la barra del navegador</small></span></button>
+  <nav class="selector-altar" id="selector-altar" aria-label="Elegir altar" hidden></nav>
   <div class="escena" id="escena"></div>
   <div class="desfile" id="desfile" aria-hidden="true"></div>
   <div class="turnos"><div class="caja">
@@ -596,6 +604,7 @@ input[type=search],input[type=email],input[type=password]{background:var(--noche
       const vuelta = Math.round(n * rota(n) / 60e3);
       const regreso = n > 1 ? " Después vuelve a aparecer aprox. cada " + (vuelta >= 1 ? vuelta + " min" : dura(n * rota(n))) + "." : "";
       if (paso !== 5) irA(5);
+      if (p) $("listo-ver").href = "#altar-" + (p.carril + 1);
       $("listo-num").textContent = turno || "--"; $("listo-regreso").textContent = regreso.trim();
       if (falta <= 0){ clearInterval(reloj); $("listo-txt").textContent = "¡" + nueva.nombre + " ya está en el altar! Mírala en la pantalla."; $("listo-cuenta").textContent = ""; return; }
       const cual = altaresEnUso(prog, Date.now()) > 1 || p.carril > 0 ? ", en el altar " + (p.carril + 1) : "";
@@ -948,14 +957,25 @@ input[type=search],input[type=email],input[type=password]{background:var(--noche
 
   let desfase = 0, temporizador = null, mostradoId = null, paneles = [];
   // #pantalla-2 muestra solo el altar 2 (para mandar cada altar a un monitor distinto)
-  const altarFijo = () => { const m = location.hash.match(/^#pantalla-(\d)$/); return m ? Math.min(MAX_ALTARES, Math.max(1, +m[1])) - 1 : null; };
+  const altarFijo = () => { const m = location.hash.match(/^#(?:pantalla|altar)-(\d)$/); return m ? Math.min(MAX_ALTARES, Math.max(1, +m[1])) - 1 : null; };
   function pintarAltar(){
     const escena = $("escena"), des = $("desfile"), ahora = Date.now();
     const prog = programa(ofrendas), fijo = altarFijo();
     const enUso = altaresEnUso(prog, ahora);
-    // en celular (pantalla vertical) no cabe la división: se turnan los altares, uno a la vez
+    // en celular (pantalla vertical) no cabe la división: se ve un altar y hay botones para cambiar de altar
     const vertical = matchMedia("(max-aspect-ratio: 1/1)").matches;
-    const altares = fijo != null ? [fijo] : vertical && enUso > 1 ? [Math.floor(ahora/12e3) % enUso] : [...Array(enUso).keys()];
+    const altares = fijo != null ? [fijo] : vertical && enUso > 1 ? [0] : [...Array(enUso).keys()];
+    const sel = $("selector-altar"), verSel = !enPantalla() && (fijo != null || (vertical && enUso > 1));
+    sel.hidden = !verSel;
+    if (verSel){
+      const total = Math.max(enUso, (fijo ?? 0) + 1), firma = total + "|" + altares[0];
+      if (sel.dataset.firma !== firma){
+        sel.dataset.firma = firma; sel.textContent = "";
+        const t = document.createElement("a"); t.href = "#altar"; t.className = "todos"; t.textContent = "Todos"; sel.appendChild(t);
+        for (let i = 0; i < total; i++){ const a = document.createElement("a"); a.href = "#altar-" + (i+1); a.textContent = "Altar " + (i+1);
+          if (i === altares[0]) a.setAttribute("aria-current", "true"); sel.appendChild(a); }
+      }
+    }
     const varios = enUso > 1 || fijo != null;
     const estrenos = prog.filter(p => p.ini <= ahora && ahora < p.fin);
     const vistos = prog.filter(p => p.fin <= ahora).map(p => p.o);
@@ -1028,7 +1048,8 @@ input[type=search],input[type=email],input[type=password]{background:var(--noche
       if (o.mensaje) add("blockquote","","“"+o.mensaje+"”");
       if (o.autor) add("div","firma","Con cariño de "+o.autor+(o.relacion?", "+o.relacion.toLowerCase():""));
     }
-    if (varios){ const n = document.createElement("span"); n.className = "num-altar"; n.textContent = "Altar " + (pan.carril + 1); r.appendChild(n); }
+    if (varios){ const n = document.createElement(enPantalla() ? "span" : "a"); n.className = "num-altar"; n.textContent = "Altar " + (pan.carril + 1);
+      if (!enPantalla()) n.href = "#altar-" + (pan.carril + 1); r.appendChild(n); }
     const viejos = [...escena.querySelectorAll(".retrato")];
     viejos.forEach(v => { v.classList.remove("visible"); setTimeout(()=>v.remove(), 1000); });
     escena.appendChild(r);
@@ -1078,7 +1099,7 @@ input[type=search],input[type=email],input[type=password]{background:var(--noche
 
   // rutas
   async function ruta(){
-    const altar = location.hash === "#altar" || enPantalla(), admin = location.hash === "#admin";
+    const altar = location.hash === "#altar" || /^#altar-\d$/.test(location.hash) || enPantalla(), admin = location.hash === "#admin";
     if ($("dlg-sol").open) $("dlg-sol").close();
     $("vista-altar").classList.toggle("modo-pantalla", enPantalla());
     $("vista-altar").hidden = !altar; $("vista-ofrenda").hidden = altar || admin; $("vista-admin").hidden = !admin;
