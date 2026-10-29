@@ -911,9 +911,9 @@ input[type=search],input[type=email],input[type=password]{background:var(--noche
   // Todo sale de los datos y la hora, así que todas las pantallas muestran lo mismo.
   const RETRASO = 90e3, ESTRENO = 60e3, ESTRENO_MIN = 30e3, ESPERA_HOLGADA = 5*60e3, ESPERA_MAX = 15*60e3;
   const rota = n => n <= 20 ? 20e3 : n <= 60 ? 15e3 : 12e3;
-  // Si aun el altar más libre haría esperar más de ESPERA_OTRO_ALTAR, se abre otro altar (hasta MAX_ALTARES)
+  // Si aun el altar más libre haría esperar más de ESPERA_OTRO_ALTAR (30 min), se abre otro altar (hasta MAX_ALTARES)
   // y la pantalla se divide. Cuando la fila se vacía, se vuelve a un solo altar.
-  const ESPERA_OTRO_ALTAR = 60*60e3, MAX_ALTARES = 4;
+  const ESPERA_OTRO_ALTAR = 30*60e3, MAX_ALTARES = 4;
   function programa(lista){
     const libre = [0];   // hora en que se desocupa cada altar abierto
     return [...lista].sort((a,b) => (a.creado||0) - (b.creado||0)).map(o => {
@@ -953,7 +953,9 @@ input[type=search],input[type=email],input[type=password]{background:var(--noche
     const escena = $("escena"), des = $("desfile"), ahora = Date.now();
     const prog = programa(ofrendas), fijo = altarFijo();
     const enUso = altaresEnUso(prog, ahora);
-    const altares = fijo != null ? [fijo] : [...Array(enUso).keys()];
+    // en celular (pantalla vertical) no cabe la división: se turnan los altares, uno a la vez
+    const vertical = matchMedia("(max-aspect-ratio: 1/1)").matches;
+    const altares = fijo != null ? [fijo] : vertical && enUso > 1 ? [Math.floor(ahora/12e3) % enUso] : [...Array(enUso).keys()];
     const varios = enUso > 1 || fijo != null;
     const estrenos = prog.filter(p => p.ini <= ahora && ahora < p.fin);
     const vistos = prog.filter(p => p.fin <= ahora).map(p => p.o);
