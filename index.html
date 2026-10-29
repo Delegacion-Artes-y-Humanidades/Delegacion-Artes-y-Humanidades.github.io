@@ -282,6 +282,18 @@ dialog.sol h2{font-size:1.5rem;color:var(--cempa-claro)}
 .adm-sol .acciones{display:flex;gap:8px;flex-wrap:wrap}
 .adm-sol .acciones .btn{padding:7px 14px;font-size:.85rem}
 input[type=search],input[type=email],input[type=password]{background:var(--noche);border:1px solid var(--linea);border-radius:10px;padding:11px 12px;width:100%;box-sizing:border-box}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.tile{background:var(--noche-2);border:1px solid var(--linea);border-radius:12px;padding:12px 14px;display:grid;gap:2px}
+.tile b{font-family:var(--display);font-weight:400;font-size:2rem;line-height:1.1;color:var(--texto);font-variant-numeric:tabular-nums}
+.tile span{font-size:.82rem;color:var(--tenue)}
+.grafica{background:var(--noche-2);border:1px solid var(--linea);border-radius:12px;padding:12px 14px;display:grid;gap:8px}
+.grafica h3{font-family:var(--cuerpo);font-weight:600;font-size:.9rem;color:var(--tenue)}
+.grafica svg{width:100%;height:auto;display:block;overflow:visible}
+.grafica .barra{fill:var(--cempa)}
+.grafica .barra:hover{fill:var(--cempa-claro)}
+.grafica text{fill:var(--tenue);font:12px var(--cuerpo)}
+.grafica .valor{fill:var(--texto);font-weight:600}
+.grafica .base{stroke:var(--linea);stroke-width:1}
 /* aviso para pasar a pantalla completa en el proyector */
 .entrar-completa{position:absolute;inset:0;z-index:6;display:grid;place-items:center;background:color-mix(in srgb,var(--noche) 55%,transparent);border:0;color:var(--texto);cursor:pointer;font:inherit}
 .entrar-completa span{background:var(--noche-2);border:2px solid var(--cempa);border-radius:18px;padding:18px 28px;font-size:clamp(1rem,2vw,1.4rem);font-weight:600;display:grid;gap:4px;text-align:center}
@@ -453,6 +465,13 @@ input[type=search],input[type=email],input[type=password]{background:var(--noche
       <p class="aviso" id="adm-aviso" role="status"></p>
     </form>
     <div id="adm-panel" hidden>
+      <section class="adm-seccion" aria-labelledby="t-mon"><h2 id="t-mon">Monitoreo</h2>
+        <div class="tiles" id="mon-tiles"></div>
+        <div class="grafica"><h3>Ofrendas por hora · últimas 24 horas</h3><div id="mon-horas"></div></div>
+        <div class="grafica"><h3>Ofrendas por día · 28 oct al 2 nov</h3><div id="mon-dias"></div></div>
+        <label class="acepto"><input type="checkbox" id="mon-sonido" checked> <span>Avisarme con sonido cuando entre una ofrenda nueva (con este panel abierto)</span></label>
+        <p class="aviso ok" id="mon-ultima" role="status"></p>
+      </section>
       <section class="adm-seccion"><h2>Solicitudes</h2><p class="aviso" id="adm-sol-conteo"></p><div id="adm-solicitudes" style="display:grid;gap:10px"></div></section>
       <section class="adm-seccion"><h2>Ofrendas</h2>
         <input type="search" id="adm-buscar" placeholder="Buscar por nombre o por quien la puso">
@@ -1155,7 +1174,7 @@ input[type=search],input[type=email],input[type=password]{background:var(--noche
     try {
       const {data, error} = await sb.from("ofrendas").select("*").order("created_at", {ascending:true}).limit(1000);
       if (error) throw error;
-      ofrendas = data.map(deFila); mostradoId = null; pintarTodo();
+      ofrendas = data.map(deFila); mostradoId = null; pintarTodo(); if (admListo) pintarMonitor();
       $("modo").textContent = "Altar en línea · cualquiera puede poner su ofrenda";
     } catch { $("modo").textContent = "Sin conexión con el altar. Reintentando…"; }
     finally { cargando = false; }
@@ -1203,7 +1222,7 @@ input[type=search],input[type=email],input[type=password]{background:var(--noche
     if (session){ const {data} = await adm.rpc("es_admin"); ok = data === true; }
     $("adm-login").hidden = !!session && ok; $("adm-panel").hidden = !ok; $("adm-salir").hidden = !session;
     $("adm-quien").textContent = session ? (ok ? "Entraste como " + session.user.email + "." : session.user.email + " no tiene permiso de organizadora.") : "Solo para quien administra el altar.";
-    if (ok){ admListo = true; cargarSolicitudes(); pintarAdmOfrendas(); }
+    if (ok){ admListo = true; cargarSolicitudes(); pintarAdmOfrendas(); pintarMonitor(); }
   }
   let solicitudes = [];
   async function cargarSolicitudes(){
@@ -1305,6 +1324,61 @@ input[type=search],input[type=email],input[type=password]{background:var(--noche
     return f;
   }
   if (location.hash === "#admin") iniciarAdmin();
+
+  // monitoreo: totales, gráficas por hora y por día, y aviso con sonido cuando entra una ofrenda
+  let conocidas = null;
+  function barras(cont, datos, rotulo){
+    const W = 720, H = 180, top = 18, bot = 26, n = datos.length, max = Math.max(1, ...datos.map(d => d.v));
+    const paso = W / n, ancho = Math.max(2, paso - 2);
+    let g = `<line class="base" x1="0" y1="${H-bot}" x2="${W}" y2="${H-bot}"/>`;
+    datos.forEach((d, i) => {
+      const h = (H - top - bot) * d.v / max, x = i * paso + 1, y = H - bot - h;
+      if (d.v) g += `<path class="barra" d="M${x} ${H-bot}V${y+Math.min(4,h)}a4 4 0 0 1 4 -4h${Math.max(0,ancho-8)}a4 4 0 0 1 4 4V${H-bot}Z"><title>${esc(d.t)}: ${d.v} ${d.v === 1 ? "ofrenda" : "ofrendas"}</title></path>`;
+      g += `<rect x="${x}" y="${top}" width="${ancho}" height="${H-top-bot}" fill="transparent"><title>${esc(d.t)}: ${d.v} ${d.v === 1 ? "ofrenda" : "ofrendas"}</title></rect>`;
+      if (d.v === max && d.v) g += `<text class="valor" x="${x + ancho/2}" y="${y - 5}" text-anchor="middle">${d.v}</text>`;
+      if (rotulo(i)) g += `<text x="${x + ancho/2}" y="${H - 8}" text-anchor="middle">${esc(d.e)}</text>`;
+    });
+    cont.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cont.previousElementSibling.textContent)}">${g}</svg>`;
+  }
+  function pintarMonitor(){
+    if (!admListo) return;
+    const ahora = Date.now(), H = 3600e3, prog = programa(ofrendas);
+    const hoy = new Date(); hoy.setHours(0,0,0,0);
+    const ultimaHora = ofrendas.filter(o => o.creado > ahora - H).length;
+    const deHoy = ofrendas.filter(o => o.creado >= +hoy).length;
+    const enFila = prog.filter(p => p.ini > ahora);
+    const espera = enFila.length ? Math.ceil((enFila[enFila.length - 1].ini - ahora) / 60e3) + " min" : "0 min";
+    const tiles = [[ofrendas.length, "ofrendas en total"], [deHoy, "hoy"], [ultimaHora, "en la última hora"], [enFila.length, "en fila para pantalla"], [espera, "espera de la última en fila"], [altaresEnUso(prog, ahora), "altares en uso"]];
+    $("mon-tiles").innerHTML = tiles.map(([v, t]) => `<div class="tile"><b>${esc(String(v))}</b><span>${esc(t)}</span></div>`).join("");
+    const inicio = Math.floor(ahora / H) * H - 23 * H;
+    const horas = [...Array(24)].map((_, i) => { const a = inicio + i * H, d = new Date(a);
+      return {v: ofrendas.filter(o => o.creado >= a && o.creado < a + H).length, e: d.getHours() + "h", t: d.toLocaleString("es-MX", {weekday:"short", hour:"numeric"})}; });
+    barras($("mon-horas"), horas, i => i % 3 === 2);
+    const dias = [28,29,30,31,1,2].map(n => { const d = new Date(2026, n >= 28 ? 9 : 10, n), f = new Date(d); f.setDate(n + 1);
+      return {v: ofrendas.filter(o => o.creado >= +d && o.creado < +f).length, e: d.toLocaleDateString("es-MX", {weekday:"short", day:"numeric"}), t: d.toLocaleDateString("es-MX", {weekday:"long", day:"numeric", month:"short"})}; });
+    barras($("mon-dias"), dias, () => true);
+    // aviso de ofrendas nuevas
+    const ids = new Set(ofrendas.map(o => o.id));
+    if (conocidas){
+      const nuevas = ofrendas.filter(o => !conocidas.has(o.id));
+      if (nuevas.length){
+        $("mon-ultima").textContent = "Nueva ofrenda: " + nuevas.map(o => o.nombre).join(", ") + " · " + hora(ahora);
+        if ($("mon-sonido").checked) campanita();
+        pintarAdmOfrendas();
+      }
+    }
+    conocidas = ids;
+  }
+  let audio = null;
+  function campanita(){
+    try {
+      audio = audio || new AudioContext();
+      [880, 1320].forEach((f, i) => { const o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime + i * .18;
+        o.frequency.value = f; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.25, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + .5);
+        o.connect(g).connect(audio.destination); o.start(t); o.stop(t + .55); });
+    } catch {}
+  }
+  setInterval(pintarMonitor, 30000);
 })();
 </script>
 </body>
