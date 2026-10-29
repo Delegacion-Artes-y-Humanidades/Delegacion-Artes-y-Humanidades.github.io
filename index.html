@@ -1030,7 +1030,8 @@ input[type=search],input[type=email],input[type=password]{background:var(--noche
   }
   function pintarPanel(pan, o, estreno, prox, varios){
     const escena = pan.el;
-    const clave = (o ? o.id + (estreno ? "*" : "") : "__vacio") + (varios ? "|" + pan.carril : "");
+    // la clave incluye el contenido: si se recargan los datos pero la ofrenda no cambió, no se vuelve a pintar
+    const clave = (o ? o.id + (estreno ? "*" : "") + JSON.stringify([o.nombre, o.anios, o.quienFue, o.origen, o.comidas, o.platillos, o.mensaje, o.autor, o.relacion, o.foto]) : "__vacio") + (varios ? "|" + pan.carril : "");
     if (clave === pan.clave) return;
     pan.clave = clave;
     const r = document.createElement("div"); r.className = "retrato";
@@ -1072,10 +1073,15 @@ input[type=search],input[type=email],input[type=password]{background:var(--noche
     if (varios){ const n = document.createElement(enPantalla() ? "span" : "a"); n.className = "num-altar"; n.textContent = "Altar " + (pan.carril + 1);
       if (!enPantalla()) n.href = "#altar-" + (pan.carril + 1); r.appendChild(n); }
     const viejos = [...escena.querySelectorAll(".retrato")];
-    viejos.forEach(v => { v.classList.remove("visible"); setTimeout(()=>v.remove(), 1000); });
     escena.appendChild(r);
     ajustarTexto(dat);
-    requestAnimationFrame(()=>requestAnimationFrame(()=>r.classList.add("visible")));
+    // el cambio se hace hasta que las fotos ya cargaron, para que no parpadee
+    const fotos = o ? [o.foto, ...platillosDe(o).map(x => x.foto)].filter(Boolean) : [];
+    Promise.all(fotos.map(u => { const i = new Image(); i.src = u; return i.decode().catch(() => {}); })).then(() => {
+      if (!r.isConnected) return;
+      viejos.forEach(v => { v.classList.remove("visible"); setTimeout(()=>v.remove(), 1200); });
+      requestAnimationFrame(()=>requestAnimationFrame(()=>r.classList.add("visible")));
+    });
   }
   // si la ficha no cabe en su recuadro, se achica el texto poco a poco hasta que quepa completa
   function ajustarTexto(dentro){
@@ -1184,7 +1190,7 @@ input[type=search],input[type=email],input[type=password]{background:var(--noche
     try {
       const {data, error} = await sb.from("ofrendas").select("*").order("created_at", {ascending:true}).limit(1000);
       if (error) throw error;
-      ofrendas = data.map(deFila); mostradoId = null; pintarTodo(); if (admListo) pintarMonitor();
+      ofrendas = data.map(deFila); pintarTodo(); if (admListo) pintarMonitor();
       $("modo").textContent = "Altar en línea · cualquiera puede poner su ofrenda";
     } catch { $("modo").textContent = "Sin conexión con el altar. Reintentando…"; }
     finally { cargando = false; }
